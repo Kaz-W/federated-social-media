@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: center;
+
+  padding: 50px 75px;
+
+  .content {
+    width: 90vw;
+
+    &.sm { max-width: 300px; }
+    &.md { max-width: 50vw; }
+  }
+}

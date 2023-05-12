@@ -1,0 +1,13 @@
+.post_creator {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin-bottom: 10px;
+  }
+
+  .post_title {
+    font-size: 18px;
+  }
+
+}

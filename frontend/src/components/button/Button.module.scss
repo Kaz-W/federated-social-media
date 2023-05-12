@@ -1,0 +1,121 @@
+$colour-normal: #EFEFEF;
+$colour-primary: #2C67FF;
+$colour-danger: #ff4646;
+$colour-bg: white;
+
+.button {
+
+  position: relative;
+
+  box-shadow: -4px -4px 8px rgba(215, 215, 215, 0.2), 4px 4px 8px rgba(0, 0, 0, 0.05);
+
+  background-color: #EFEFEF;
+  border: none;
+  border-radius: 3px;
+
+  cursor: pointer;
+
+  transition: filter 100ms ease;
+
+  &:hover {
+    filter: brightness(95%);
+  }
+
+  &:active {
+    filter: brightness(90%);
+  }
+
+  &.c_normal {
+    background-color: $colour-normal;
+    outline-color: rgba($colour-primary, 0.7);
+    :global(.far) {
+      color: $colour-primary;
+    }
+    &:disabled {
+      background-color: lighten($colour-normal, 20%);
+    }
+  }
+
+  &.c_primary {
+    background-color: $colour-primary;
+    outline-color: rgba($colour-primary, 0.7);
+    color: $colour-normal;
+    box-shadow: -4px -4px 8px rgba($colour-primary, 0.2), 4px 4px 8px rgba(0, 0, 0, 0.05);
+    :global(.far) {
+      color: $colour-normal;
+    }
+    &:disabled {
+      background-color: lighten($colour-primary, 20%);
+    }
+  }
+
+  &.c_invert {
+    background-color: $colour-bg;
+    outline-color: rgba($colour-primary, 0.7);
+    box-shadow: -4px -4px 8px rgba($colour-bg, 0.2), 4px 4px 8px rgba(0, 0, 0, 0.05);
+    :global(.far) {
+      color: $colour-primary;
+    }
+    &:disabled {
+      background-color: lighten($colour-bg, 20%);
+    }
+  }
+
+  &.c_danger {
+    background-color: $colour-danger;
+    outline-color: rgba($colour-danger, 0.7);
+    color: $colour-normal;
+    box-shadow: -4px -4px 8px rgba($colour-danger, 0.2), 4px 4px 8px rgba(0, 0, 0, 0.05);
+    :global(.far) {
+      color: $colour-normal;
+    }
+    &:disabled {
+      background-color: lighten($colour-danger, 20%);
+    }
+  }
+
+  &.c_none {
+    background-color: transparent;
+    outline-color: transparent;
+    box-shadow: none;
+    :global(.far) {
+      color: $colour-normal;
+    }
+  }
+
+  &.s_normal {
+    padding: 5px 10px;
+  }
+
+  &.s_small {
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+
+  &.s_big {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  &.a_left {
+    text-align: left;
+  }
+
+  &.a_center {
+    text-align: center;
+  }
+
+  &.a_right {
+    text-align: right;
+  }
+}
+
+.loading {
+  backdrop-filter: blur(1px);
+  background-color: rgba(white, 0.5);
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}

@@ -1,0 +1,18 @@
+.loading {
+
+  background-color: white;
+  z-index: 2000;
+
+  display: flex;
+  position: absolute;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  transition: opacity 0.5s ease;
+
+  &.hidden { opacity: 0; }
+}

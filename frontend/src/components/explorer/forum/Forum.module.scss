@@ -1,0 +1,10 @@
+.forum_item {
+  margin: 5px 0;
+
+  box-sizing: border-box;
+
+
+  &.active {
+    background-color: #c3c3c3;
+  }
+}

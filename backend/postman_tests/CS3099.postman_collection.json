@@ -1,0 +1,3997 @@
+{
+	"info": {
+		"_postman_id": "0e5bb4c4-8973-4ede-8233-7903b9e0beaa",
+		"name": "CS3099 Copy 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication Tests",
+			"item": [
+				{
+					"name": "Ping test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ping test\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/ping",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attempt to create user with username too long",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Attempt to create user with username too long\", function(){\r",
+									"    pm.response.to.have.status(406);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Username too long, (username cannot be longer than 15 characters).\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"abcdefghijklmnopqrstuvwxyz\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/signup",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attempt to create user with password too short",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('username', dateNow.toISOString().slice(11,19));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Attempt to create user with password too short\", function(){\r",
+									"    pm.response.to.have.status(406);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Password too short (must be 8 characters or more).\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"2short\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/signup",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('username', dateNow.toISOString().slice(11,19));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create new user\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"message\").eql(\"New user created.\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/signup",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attempt to create second user with same usename",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Attempt to create second user with same usename\", function(){\r",
+									"    pm.response.to.have.status(406);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Username already taken\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/signup",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login as new user\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"token\")\r",
+									"    pm.environment.set(\"JWT_token\", responseJson.token.toString())    \r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/signin",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attempt login with invalid credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Attempt login with invalid credentials\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Invalid username or password.\")\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"WRONG PASSWORD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/signin",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all forums",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"get all forums\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[0]).to.have.property(\"forumName\").to.equal(\"test_forum\")\r",
+									"    pm.expect(responseJson[1]).to.have.property(\"forumName\").to.equal(\"test_forum2\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/allforums",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"allforums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"get all users\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[0]).to.have.property(\"username\").to.equal(pm.environment.get(\"username\"))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/allusers",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"allusers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get server\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.environment.set(\"server\", responseJson[0].id)\r",
+									"    pm.environment.set(\"serverUrl\", responseJson[0].url)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/servers/",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"servers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get forum",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get forudm\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.environment.set(\"forum\", responseJson._embedded.forumList[0].id)\r",
+									"    pm.environment.set(\"forum2\", responseJson._embedded.forumList[1].id)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/forums",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/forums"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get subforum",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get subforum\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.environment.set(\"subforum\", responseJson._embedded.subforumList[0].id)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/forums/{{forum}}/subforums",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/forums/{{forum}}/subforums"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create a post\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"postTitle\")\r",
+									"    pm.expect(responseJson).to.have.property(\"postContents\")\r",
+									"    pm.environment.set(\"post\", responseJson.id)\r",
+									"    pm.environment.set(\"user_id\", responseJson.userId)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get created post from subforum posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get created post\", function(){\r",
+									"    // get first post in subforum\r",
+									"    const responseJson = pm.response.json()[\"_embedded\"][\"postList\"][0];\r",
+									"    pm.expect(responseJson).to.have.property(\"postTitle\")\r",
+									"    pm.expect(responseJson).to.have.property(\"postContents\")\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+									"const post = pm.environment.get(\"post\");\r",
+									"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/subforums/{{subforum}}/posts",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/subforums/{{subforum}}/posts"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Edit post\", function(){\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"url\":\"http://[::1]:3000/api/posts/{{post}}\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"edited test\"}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get edited post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get created post\", function(){\r",
+									"    // get first post in subforum\r",
+									"    const responseJson = pm.response.json()\r",
+									"    pm.expect(responseJson).to.have.property(\"postTitle\").to.eql(\"test title\")\r",
+									"    pm.expect(responseJson).to.have.property(\"postContents\").to.equal(\"edited test\")\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{post}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/posts/{{post}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment on post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Comment on post\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"commentContent\")\r",
+									"    pm.environment.set(\"comment\", responseJson[\"id\"])\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\":\"{{address}}/api/posts/{{post}}/comments\",\r\n    \"content\":{\"commentContent\":\"Test comment\"}\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Edit comment\", function(){\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"url\":\"http://[::1]:3000/api/comments/{{comment}}\",\"content\":{\"commentContent\":\"Edited test comment\"}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get edited comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get created post\", function(){\r",
+									"    // get first post in subforum\r",
+									"    const responseJson = pm.response.json()\r",
+									"    pm.expect(responseJson).to.have.property(\"commentContent\").to.equal(\"Edited test comment\")\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/comments/{{comment}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/comments/{{comment}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nested comment on comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Comment on post\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"commentContent\")\r",
+									"    pm.environment.set(\"comment\", responseJson[\"id\"])\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\":\"{{address}}/api/comments/{{comment}}/comments\",\r\n    \"content\":{\"commentContent\":\"Nested comment\"}\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get nested comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get created post\", function(){\r",
+									"    // get first post in subforum\r",
+									"    const responseJson = pm.response.json()\r",
+									"    pm.expect(responseJson).to.have.property(\"commentContent\").to.equal(\"Nested comment\")\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/comments/{{comment}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/comments/{{comment}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Delete comment\", function(){\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\":\"{{address}}/api/comments/{{comment}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail to get now deleted comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get created post\", function(){\r",
+									"    // get first post in subforum\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(502);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/comments/{{comment}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/comments/{{comment}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Delete post\", function(){\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\":\"{{address}}/api/posts/{{post}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/internal/relay",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail to get now deleted post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get created post\", function(){\r",
+									"    // get first post in subforum\r",
+									"    const responseJson = pm.response.json()\r",
+									"    pm.response.to.have.status(502);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{post}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"relay"
+							],
+							"query": [
+								{
+									"key": "relayurl",
+									"value": "{{address}}/api/posts/{{post}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Certification Tests",
+			"item": [
+				{
+					"name": "No signature provided",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"No signature provided\", function(){\r",
+									"    // malformed signature should not succeed as a request\r",
+									"    // expect a fail\r",
+									"    pm.response.to.have.status(400);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Cannot certify: No 'signature' header provided.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-id",
+								"value": "9d853472-e6e0-4792-b096-74ff01970685",
+								"type": "text"
+							},
+							{
+								"key": "current-date",
+								"value": "2021-03-23T21:38:50.746Z",
+								"type": "text"
+							},
+							{
+								"key": "signature-input",
+								"value": "signature-input: sig1=(*request-target, date, user-id); keyId=http://[::1]:3000/api/key; alg=RSASSA-PSS-SHA512",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"commentContent\": \"testComment {{$timestamp}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/forums/count",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"forums",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid signature",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Invalid signature\", function(){\r",
+									"    // malformed signature should not succeed as a request\r",
+									"    // expect a fail\r",
+									"    pm.response.to.have.status(400);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql('Cannot certify: Failed to verify signature with signature input provided.\\nSignature: BAD_SIG\\nSignature-Input:\\n*request-target: get /api/forums/count\\ncurrent-date: 2021-03-23T21:31:32.602Z\\nuser-id: d6c467ed-d925-48de-8d67-d5386db2c454');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": " application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "content-type",
+								"value": " application/json;charset=utf-8",
+								"type": "text"
+							},
+							{
+								"key": "user-id",
+								"value": " d6c467ed-d925-48de-8d67-d5386db2c454",
+								"type": "text"
+							},
+							{
+								"key": "current-date",
+								"value": " 2021-03-23T21:31:32.602Z",
+								"type": "text"
+							},
+							{
+								"key": "signature",
+								"value": " sig1=:BAD_SIG",
+								"type": "text"
+							},
+							{
+								"key": "signature-input",
+								"value": " signature-input: sig1=(*request-target, date, user-id); keyId=http://[::1]:3000/api/key; alg=RSASSA-PSS-SHA512",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/forums/count",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"forums",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unknown origin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Unknown origin\", function(){\r",
+									"    // malformed signature should not succeed as a request\r",
+									"    // expect a fail\r",
+									"    pm.response.to.have.status(403);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Cannot certify: http://UNKNOWN_SERVER not supported. Contact group B7 to have this server added to allowed servers.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-id",
+								"value": " 9d853472-e6e0-4792-b096-74ff01970685",
+								"type": "text"
+							},
+							{
+								"key": "current-date",
+								"value": " 2021-03-23T21:38:50.746Z",
+								"type": "text"
+							},
+							{
+								"key": "signature",
+								"value": "sig1=:Q9TeeSu2JsCriVIQqbIPS24wXmT66/74mE8B49niPfFsChnv9kGPOgj8UxDLQUTA1zzipKfB5DR+zxpYvpovYiF0IHjaX+s3QoRPDkthZ23d+xJtsueFNru1WrxmpJNW1vCM2/j4vUcQaqV9ZiTVWrB3Uvxh/zVpErRIonsSWxFIZ2pYCwzSidqAt6QIcBaumZw7Hzt65wt0B9NqfSHcZuOYsaYb9Hf8RkYCVupGfQV4Ba295KBsUb9iNoCZRs08ZUlMJH4FL2Osig4j2eOblYaILcx9B4JEWguRid+ufvUT1mxXs9gEr/tD5+BJBvWhSOfiXv63RuSYmFYS1qQTZiuqDTiLbiIjInMmhF7iypxs2yjzzxfsqvJ30a7VlsK+uUfG+vOS3c5ot0wm/dTShSJzCCSJTsibFTkyivBKC4O+VVRMcMpxELqI8/nwAXFUjweVjJ7asy7tYxZDvO92wLHyU4IxMM2j6gV74KDQtXJkxjDLiYQWVcXPbtUPMP2f0mJEg+23tSEFm5Z+G9OjRvcVsSIplczZhkU4jXWEL/dCU3UveqvFmkqmb93SAPVVdNvOyHsdUtZfslCtDT9MYJYY8e1lLfjnrp/90x6YAvx2waA9krHiz91hNCVEYScQovESdZ+m0KCBez6b2I2RrREwFDaIvKWRT9qXzscfVaE=:",
+								"type": "text"
+							},
+							{
+								"key": "signature-input",
+								"value": " signature-input: sig1=(*request-target, date, user-id); keyId=http://UNKNOWN_SERVER/api/key; alg=RSASSA-PSS-SHA512",
+								"type": "text"
+							},
+							{
+								"key": "host",
+								"value": " UNKNOWN_SERVER",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"commentContent\": \"testComment {{$timestamp}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/forums/count",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"forums",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No current-date header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"No current-date header\", function(){\r",
+									"    // malformed signature should not succeed as a request\r",
+									"    // expect a fail\r",
+									"    pm.response.to.have.status(400);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Cannot certify: No 'current-date' header provided.\");\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-id",
+								"value": " 9d853472-e6e0-4792-b096-74ff01970685",
+								"type": "text"
+							},
+							{
+								"key": "signature",
+								"value": "sig1=:Q9TeeSu2JsCriVIQqbIPS24wXmT66/74mE8B49niPfFsChnv9kGPOgj8UxDLQUTA1zzipKfB5DR+zxpYvpovYiF0IHjaX+s3QoRPDkthZ23d+xJtsueFNru1WrxmpJNW1vCM2/j4vUcQaqV9ZiTVWrB3Uvxh/zVpErRIonsSWxFIZ2pYCwzSidqAt6QIcBaumZw7Hzt65wt0B9NqfSHcZuOYsaYb9Hf8RkYCVupGfQV4Ba295KBsUb9iNoCZRs08ZUlMJH4FL2Osig4j2eOblYaILcx9B4JEWguRid+ufvUT1mxXs9gEr/tD5+BJBvWhSOfiXv63RuSYmFYS1qQTZiuqDTiLbiIjInMmhF7iypxs2yjzzxfsqvJ30a7VlsK+uUfG+vOS3c5ot0wm/dTShSJzCCSJTsibFTkyivBKC4O+VVRMcMpxELqI8/nwAXFUjweVjJ7asy7tYxZDvO92wLHyU4IxMM2j6gV74KDQtXJkxjDLiYQWVcXPbtUPMP2f0mJEg+23tSEFm5Z+G9OjRvcVsSIplczZhkU4jXWEL/dCU3UveqvFmkqmb93SAPVVdNvOyHsdUtZfslCtDT9MYJYY8e1lLfjnrp/90x6YAvx2waA9krHiz91hNCVEYScQovESdZ+m0KCBez6b2I2RrREwFDaIvKWRT9qXzscfVaE=:",
+								"type": "text"
+							},
+							{
+								"key": "signature-input",
+								"value": " signature-input: sig1=(*request-target, date, user-id); keyId=http://[::1]:3000/api/key; alg=RSASSA-PSS-SHA512",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"commentContent\": \"testComment {{$timestamp}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/forums/count",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"forums",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No user-id header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"No user-id header\", function(){\r",
+									"    // malformed signature should not succeed as a request\r",
+									"    // expect a fail\r",
+									"    pm.response.to.have.status(400);\r",
+									"        const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"Cannot certify: No 'user-id' header provided.\")\r",
+									"\r",
+									"    // loops this section of tests\r",
+									"    var currentCount = parseInt(pm.environment.get(\"count\"))\r",
+									"    var maxCount = parseInt(pm.environment.get(\"maxCount\"))\r",
+									"    currentCount = currentCount + 1 ;\r",
+									"    if (currentCount <= maxCount){\r",
+									"        pm.environment.set(\"count\", currentCount);\r",
+									"        // go back to start of this batch after waiting 1 second.\r",
+									"        setTimeout(function(){\r",
+									"            postman.setNextRequest(\"Ping test\");\r",
+									"        }, 1500);\r",
+									"    } else {\r",
+									"        // reset count\r",
+									"        pm.environment.set(\"count\", 0);\r",
+									"    }\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "current-date",
+								"value": " 2021-03-23T21:38:50.746Z",
+								"type": "text"
+							},
+							{
+								"key": "signature",
+								"value": "sig1=:Q9TeeSu2JsCriVIQqbIPS24wXmT66/74mE8B49niPfFsChnv9kGPOgj8UxDLQUTA1zzipKfB5DR+zxpYvpovYiF0IHjaX+s3QoRPDkthZ23d+xJtsueFNru1WrxmpJNW1vCM2/j4vUcQaqV9ZiTVWrB3Uvxh/zVpErRIonsSWxFIZ2pYCwzSidqAt6QIcBaumZw7Hzt65wt0B9NqfSHcZuOYsaYb9Hf8RkYCVupGfQV4Ba295KBsUb9iNoCZRs08ZUlMJH4FL2Osig4j2eOblYaILcx9B4JEWguRid+ufvUT1mxXs9gEr/tD5+BJBvWhSOfiXv63RuSYmFYS1qQTZiuqDTiLbiIjInMmhF7iypxs2yjzzxfsqvJ30a7VlsK+uUfG+vOS3c5ot0wm/dTShSJzCCSJTsibFTkyivBKC4O+VVRMcMpxELqI8/nwAXFUjweVjJ7asy7tYxZDvO92wLHyU4IxMM2j6gV74KDQtXJkxjDLiYQWVcXPbtUPMP2f0mJEg+23tSEFm5Z+G9OjRvcVsSIplczZhkU4jXWEL/dCU3UveqvFmkqmb93SAPVVdNvOyHsdUtZfslCtDT9MYJYY8e1lLfjnrp/90x6YAvx2waA9krHiz91hNCVEYScQovESdZ+m0KCBez6b2I2RrREwFDaIvKWRT9qXzscfVaE=:",
+								"type": "text"
+							},
+							{
+								"key": "signature-input",
+								"value": " signature-input: sig1=(*request-target, date, user-id); keyId=http://[::1]:3000/api/key; alg=RSASSA-PSS-SHA512",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"commentContent\": \"testComment {{$timestamp}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/forums/count",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"forums",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Valid Header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Valid header\", function(){\r",
+									"    // malformed signature should not succeed as a request\r",
+									"    // expect a fail\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "current-date",
+								"value": " 2021-04-07T23:02:24.204Z",
+								"type": "text"
+							},
+							{
+								"key": "user-id",
+								"value": " ANONYMOUS",
+								"type": "text"
+							},
+							{
+								"key": "signature",
+								"value": "sig1=:gBxyJIB1jPfo/pNKG0YDA6kry4xmHJ3fNiGF7n/XSjUAfu9FIqwN/VQ80RDk442PmMP09OKyAl36wO3uvKelo66LRiLx5ICJWCbefiO1eVAqSPPUN2KqicaSrueJXsv9OM/CGTl+NGTqODqs7j3SF9tF6OGCZPvAOflqrtae18itcLb5Lmi9EzWEgP4oWme/vYatxJOYwgrZRkeP4LR5u8GJ24XnPFeLhqnBqqmR73HVm55uXGj2neaB+GFoSBFXOZ6uUbc/lnGEEiG2wobo/VU1TDOLZgf5cDpOg0kmclc3jxxI1/5idgzdzdOIVbwBZuqdz6j/X+4xI0+/Y1lnB7SiMa4MM60xII0FKYzSk81eWla2yw8yauDLyCAhP7pl0ItuDcQmQMzg0XdyonaMOaL2Yuuck1TegkOsCKhWmZhbDJT3nvl//pdNMF/HDOa4XFr/NaO584ukukw0BpJCVwSBDhcakfbt99FcnSaOHx9ia3OaVDwbD65byJGgLH43DK+G5nMbMJwRecEQxs4UeL2h5A5lJOCY/kJhgO7rcXKhsmuDYtkfUyn2Su3jPi1D4xdxwj5gDX7gzVaAOU/G5QxMZ2SaYPn+eKc8isxYFUGzMpC57NjpusfmuLVP/Innj2p5+Gi3abQVn26BNFIZAP/Y9ETUx/oauPubEqdacIg=:",
+								"type": "text"
+							},
+							{
+								"key": "signature-input",
+								"value": " signature-input: sig1=(*request-target, date, user-id); keyId=http://nonexistent/api/key; alg=RSASSA-PSS-SHA512",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\":\"{{address}}/api/forums/count\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}/api/forums/count",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"forums",
+								"count"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Upvoting Tests",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Dummy initialiser request",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let count = pm.environment.get(\"upvoteUserCountImmutable\")\r",
+											"pm.environment.set(\"upvoteUserCount\", count)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/ping",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create upvote user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{upvoteUserCount}}\",\r\n    \"password\": \"{{upvoteUserPass}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signup",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Login user\", function(){\r",
+											"    var currentCount = pm.environment.get(\"upvoteUserCount\")\r",
+											"    if (currentCount > 0){\r",
+											"        pm.response.to.have.status(200);\r",
+											"        const responseJson = pm.response.json();\r",
+											"        pm.expect(responseJson).to.have.property(\"token\")\r",
+											"\r",
+											"        pm.environment.set(`upvoteUser${currentCount}`, responseJson.token.toString())  \r",
+											"        currentCount = currentCount - 1 ;\r",
+											"        pm.environment.set(\"upvoteUserCount\", currentCount);\r",
+											"        postman.setNextRequest(\"Create upvote user\");\r",
+											"    }  \r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{upvoteUserCount}}\",\r\n    \"password\": \"{{upvoteUserPass}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signin",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create post to upvote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create post to upvote\", function(){\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.environment.set(\"upvote_post\", responseJson.id)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"upvote post\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create post to up and downvote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create post to up and downvote\", function(){\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.environment.set(\"upvotedownvote_post\", responseJson.id)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"upvote/downvote post\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create post to downvote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create post to downvote\", function(){\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.environment.set(\"downvote_post\", responseJson.id);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"downvote post\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Upvotes many",
+					"item": [
+						{
+							"name": "Dummy initialiser request 1",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let count = pm.environment.get(\"upvoteUserCountImmutable\")\r",
+											"pm.environment.set(\"upvoteUserCount\", count)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/ping",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All upvote post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let count = pm.environment.get(\"upvoteUserCount\")\r",
+											"let currentUpvoteUser = pm.environment.get(`upvoteUser${count}`)\r",
+											"pm.environment.set(\"currentUpvoteUser\", currentUpvoteUser);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{currentUpvoteUser}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvote_post}}/vote\",\"content\":{\"isUpvote\":true}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Upvote and downvote",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let count = pm.environment.get(\"upvoteUserCount\")\r",
+											"if (count % 2 == 0){\r",
+											"    pm.environment.set(\"alternatingVote\", true);\r",
+											"}\r",
+											"else{\r",
+											"    pm.environment.set(\"alternatingVote\", false);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{currentUpvoteUser}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvotedownvote_post}}/vote\",\"content\":{\"isUpvote\":{{alternatingVote}}}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All downvote post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"All downvote post\", function(){\r",
+											"    var currentCount = pm.environment.get(\"upvoteUserCount\")\r",
+											"    pm.environment.set(\"upvoteUserCount\", currentCount-1)\r",
+											"    if (currentCount-1 > 0){        \r",
+											"        postman.setNextRequest(\"All upvote post\");\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{currentUpvoteUser}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{downvote_post}}/vote\",\"content\":{\"isUpvote\":false}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check downvoted post has right number of up/downvotes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check downvoted post has right number of up/downvotes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(0);\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(parseInt(pm.environment.get(\"upvoteUserCountImmutable\")));\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{downvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{downvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check upvoted post has right number of upvotes Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check upvoted post has right number of up/downvotes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(0);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(parseInt(pm.environment.get(\"upvoteUserCountImmutable\")));\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check up/downvoted post has right number of up/downvotes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check up/downvoted post has right number of up/downvotes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(parseInt(pm.environment.get(\"upvoteUserCountImmutable\"))/2);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(parseInt(pm.environment.get(\"upvoteUserCountImmutable\"))/2);\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvotedownvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvotedownvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Dummy initialiser request 2",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let count = pm.environment.get(\"upvoteUserCountImmutable\")\r",
+											"pm.environment.set(\"upvoteUserCount\", count)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/ping",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove votes",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let count = pm.environment.get(\"upvoteUserCount\")\r",
+											"let currentUpvoteUser = pm.environment.get(`upvoteUser${count}`)\r",
+											"pm.environment.set(\"currentUpvoteUser\", currentUpvoteUser);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Remove votes\", function(){\r",
+											"    var currentCount = pm.environment.get(\"upvoteUserCount\")\r",
+											"    pm.environment.set(\"upvoteUserCount\", currentCount-1)\r",
+											"    if (currentCount-1 > 0){\r",
+											"        postman.setNextRequest(\"Remove votes\");\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{currentUpvoteUser}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvotedownvote_post}}/vote\",\"content\":{\"isUpvote\":null}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check all votes have been removed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check all votes have been removed\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(0);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(0);\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvotedownvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvotedownvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Double vote tests",
+					"item": [
+						{
+							"name": "1st upvote",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{upvoteUser1}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvotedownvote_post}}/vote\",\"content\":{\"isUpvote\":true}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check post has right number of votes 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check post has right number of votes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(0);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(1);\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvotedownvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvotedownvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2nd upvote",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{upvoteUser1}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvotedownvote_post}}/vote\",\"content\":{\"isUpvote\":true}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check post has right number of votes 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check post has right number of votes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(0);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(1);\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvotedownvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvotedownvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1st downvote",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{upvoteUser1}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvotedownvote_post}}/vote\",\"content\":{\"isUpvote\":false}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check post has right number of votes 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check post has right number of votes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(1);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(0);\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvotedownvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvotedownvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2nd downvote",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{upvoteUser1}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"{{address}}/api/posts/{{upvotedownvote_post}}/vote\",\"content\":{\"isUpvote\":false}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check post has right number of votes 4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check post has right number of votes\", function(){\r",
+											"    // get first post in subforum\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"downvotes\").to.eql(1);\r",
+											"    pm.expect(responseJson).to.have.property(\"upvotes\").to.eql(0);\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const serverUrl = pm.environment.get(\"serverUrl\");\r",
+											"const post = pm.environment.get(\"post\");\r",
+											"pm.environment.set(\"encodedQueryParam\", encodeURIComponent(serverUrl + \"/api/posts/\" + post));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/posts/{{upvotedownvote_post}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/posts/{{upvotedownvote_post}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Banning Tests",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Get second subforum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"pm.environment.set(\"subforum2\", responseJson._embedded.subforumList[0].id)\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/forums/{{forum2}}/subforums",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/forums/{{forum2}}/subforums"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new user to be forum admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{admin_username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signup",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get token for admin to be",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"admin_JWT_token\", pm.response.json().token.toString())    "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{admin_username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signin",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a post to get admin userId",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"admin_user_id\", pm.response.json().userId)\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a post to get godmin userId",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"godmin_user_id\", pm.response.json().userId)\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Server admin tests",
+					"item": [
+						{
+							"name": "Login as godmin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Login as godmin\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"token\")\r",
+											"    pm.environment.set(\"godmin_JWT_token\", responseJson.token.toString())    \r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"godmin\",\r\n    \"password\": \"godminpassphrase\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signin",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ban test user from server",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ban test user from server\", function(){\r",
+											"    pm.response.to.have.status(204);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"serverRole\": \"banned\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/users/{{user_id}}/server-role",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"users",
+										"{{user_id}}",
+										"server-role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Attempt to log in as banned user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Login as banned user\", function(){\r",
+											"    pm.response.to.have.status(403);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson[\"error\"]).to.have.property(\"message\").to.eql(\"You are banned from this server\");\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signin",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unban test user from server",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Unban test user from server\", function(){\r",
+											"    pm.response.to.have.status(204);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"serverRole\": null}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/users/{{user_id}}/server-role",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"users",
+										"{{user_id}}",
+										"server-role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login as test user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Login as test user\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"token\")\r",
+											"    pm.environment.set(\"JWT_token\", responseJson.token.toString())    \r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{testPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/signin",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ban test user from forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ban test user from forum\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    // console.info(responseJson[\"error\"][\"message\"]);\r",
+											"    pm.expect(responseJson).to.have.property(\"id\");\r",
+											"    pm.environment.set(\"roleId\", responseJson[\"id\"]);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"forumId\": \"{{forum}}\", \"userId\": \"{{user_id}}\", \"role\": \"banned\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/roles",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Attempt to create a post in banned forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Attempt to create a post when banned from forum\", function(){\r",
+											"    pm.response.to.have.status(502)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Attempt to create a comment in banned forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Attempt to create a comment in banned forum\", function(){\r",
+											"    pm.response.to.have.status(502)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/posts/{{post}}/comments\",\"content\":{\"commentTitle\":\"test title\",\"commentContent\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Navigate to non-banned subforum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Navigate to non-banned subforum\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.environment.set(\"subforum2\", responseJson._embedded.subforumList[0].id)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{address}}/api/internal/relay?relayurl={{address}}/api/forums/{{forum2}}/subforums",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									],
+									"query": [
+										{
+											"key": "relayurl",
+											"value": "{{address}}/api/forums/{{forum2}}/subforums"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a post in non-banned forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create a post\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"postTitle\")\r",
+											"    pm.expect(responseJson).to.have.property(\"postContents\")\r",
+											"    pm.environment.set(\"post\", responseJson.id)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum2}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Comment in non-banned forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Comment in non-banned forum\", function(){\r",
+											"    pm.response.to.have.status(200)\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"commentTitle\")\r",
+											"    pm.expect(responseJson).to.have.property(\"commentContent\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/posts/{{post}}/comments\",\"content\":{\"commentTitle\":\"test title\",\"commentContent\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unban test user from forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Unban test user from forum\", function(){\r",
+											"    pm.response.to.have.status(204);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/roles/{{roleId}}",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"roles",
+										"{{roleId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create a post\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"postTitle\")\r",
+											"    pm.expect(responseJson).to.have.property(\"postContents\")\r",
+											"    pm.environment.set(\"post\", responseJson.id)\r",
+											"    pm.environment.set(\"user_id\", responseJson.userId)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a comment on same post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create a comment on same post\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"commentTitle\")\r",
+											"    pm.expect(responseJson).to.have.property(\"commentContent\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"url\": \"http://[::1]:3000/api/posts/{{post}}/comments\",\r\n    \"content\": {\r\n        \"commentTitle\": \"comment title\",\r\n        \"commentContent\": \"unbanned comment\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Forum admin tests",
+					"item": [
+						{
+							"name": "Promote user to server admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Promote user to server admin\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"userId\": \"{{admin_user_id}}\", \"forumId\": \"{{forum}}\", \"role\": \"admin\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/roles",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ban test user from forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ban test user from forum\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"id\");\r",
+											"    pm.environment.set(\"roleId\", responseJson[\"id\"]);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{godmin_JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"forumId\": \"{{forum}}\", \"userId\": \"{{user_id}}\", \"role\": \"banned\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/roles",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Attempt to create a post in banned forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Attempt to create a post when banned from forum\", function(){\r",
+											"    pm.response.to.have.status(502)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{subforum}}/posts\",\"content\":{\"postTitle\":\"test title\",\"postContents\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Attempt to create a comment in banned forum",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Attempt to create a comment in banned forum\", function(){\r",
+											"    pm.response.to.have.status(502)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{JWT_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"url\":\"http://[::1]:3000/api/subforums/{{post}}/comments\",\"content\":{\"commentTitle\":\"test title\",\"commentContent\":\"test\"}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{address}}/api/internal/relay",
+									"host": [
+										"{{address}}"
+									],
+									"path": [
+										"api",
+										"internal",
+										"relay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

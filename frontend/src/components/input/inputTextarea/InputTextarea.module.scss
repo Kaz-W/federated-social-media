@@ -1,0 +1,8 @@
+@import "../Input";
+
+.input_textarea {
+  @extend .base;
+
+  outline: white;
+  resize: vertical;
+}

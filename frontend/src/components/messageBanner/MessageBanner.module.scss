@@ -1,0 +1,58 @@
+.message_banner {
+  padding: 10px 10px;
+  margin: 5px 0;
+  border-radius: 3px;
+  font-weight: bold;
+
+  position: relative;
+  z-index: 1;
+
+  &.slim {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  &.info {
+    background: linear-gradient(241.27deg, #908DFF -27.49%, #433FFF 123.96%);
+    color: #DAD9FF;
+  }
+
+  &.error {
+    background: linear-gradient(241.27deg, #FFA2A2 -27.49%, #FF3232 123.96%);
+    color: #FFD9D9;
+  }
+
+  &.neutral {
+    background: linear-gradient(241.27deg, #E0E0E0 -27.49%, #9F9F9F 123.96%);
+    color: #4e4e4e;
+  }
+
+  &::before {
+    animation-name: flash;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-out;
+
+    background: linear-gradient(241.27deg, #EFEFEF -27.49%, #DADADA 123.96%);
+    opacity: 0;
+
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+

@@ -1,0 +1,38 @@
+$accent-colour: #2C67FF;
+
+.empty_feed {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 32px;
+    color: $accent-colour;
+  }
+
+  p {
+    font-size: 18px;
+  }
+}
+
+.blank_feed {
+  @extend .empty_feed;
+
+  .main_text {
+    margin: 5px 0;
+  }
+
+  .sub_text {
+    font-size: 14px;
+    margin: 0;
+    color: #8f8f8f;
+  }
+}
+
+.feed {
+  min-height: 100%;
+}

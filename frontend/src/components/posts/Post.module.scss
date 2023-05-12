@@ -1,0 +1,83 @@
+$accent-colour: #2C67FF;
+
+.post {
+  padding: 0 20px;
+  margin: 30px 0;
+
+  position: relative;
+
+  /* Makes that vertical line to the left of a post */
+  &:before {
+    position: absolute;
+    content: "";
+    top: 20px;
+    left: 5px;
+    width: 2px;
+    background-color: $accent-colour;
+    bottom: 0;
+  }
+
+  .title {
+    margin: 20px 0 5px;
+
+    font-size: 24px;
+    font-weight: normal;
+  }
+
+  .content {
+    margin: 5px 0 20px;
+  }
+}
+
+.actions_container {
+  display: flex;
+  margin-top: 10px;
+
+  span {
+    font-style: italic;
+  }
+
+  > * {
+    margin-right: 30px;
+  }
+}
+
+.post_header {
+  display: flex;
+  align-items: center;
+
+  .header_details {
+    padding-left: 20px;
+
+    > * {
+      margin: 0;
+    }
+  }
+
+  .username {
+    color: inherit;
+    text-decoration: inherit;
+    font-size: 18px;
+  }
+  .username:hover {
+    color: $accent-colour;
+  }
+
+  .post_date {
+    font-size: 14px;
+    color: #838383;
+  }
+}
+
+.load_btn {
+  width: 100%;
+}
+
+.empty_list {
+  text-align: center;
+
+  p {
+    font-size: 16px;
+    color: #838383;
+  }
+}

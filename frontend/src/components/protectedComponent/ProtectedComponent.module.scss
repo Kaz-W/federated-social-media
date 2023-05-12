@@ -1,0 +1,21 @@
+.wrapper {
+
+  display: flex;
+
+  &.a-l {
+    justify-content: left;
+  }
+
+  &.a-m {
+    justify-content: center;
+  }
+
+  &.a-r {
+    justify-content: right;
+  }
+
+  .message {
+    margin: 0;
+    color: grey;
+  }
+}

@@ -1,0 +1,28 @@
+.dashboard {
+  display: flex;
+  flex-grow: 1; // Make the dash take up the rest of the page, provided it's in a <Page>.
+}
+
+.main {
+  flex-grow: 1;
+}
+
+.side_bar {
+  width: 20vw;
+  max-width: 400px;
+  position: fixed;
+  height: 100vh;
+  margin-top: -74px;
+  padding-top: 74px;
+  box-sizing: border-box;
+}
+
+.side_bar_left {
+  @extend .side_bar;
+  left: 0;
+}
+
+.side_bar_right {
+  @extend .side_bar;
+  right: 0;
+}

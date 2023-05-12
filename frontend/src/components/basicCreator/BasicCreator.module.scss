@@ -1,0 +1,22 @@
+$accent-colour: #2C67FF;
+
+.basic_creator {
+  padding: 5px 0;
+  display: flex;
+
+  input {
+    width: 100%;
+  }
+
+  .folder_icon {
+    color: $accent-colour;
+  }
+
+  button {
+    margin-left: 5px;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}

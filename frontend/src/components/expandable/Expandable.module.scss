@@ -1,0 +1,12 @@
+.expandable {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+.label, .btn {
+  margin: 5px;
+}

@@ -1,0 +1,93 @@
+.profile_header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+
+  .profile_info_left {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: left;
+    margin-right: 3em;
+    width: 100%;
+    box-sizing: border-box;
+
+    .profile_desc {
+      margin-left: 0.3em;
+      font-size: 14px;
+      font-style: italic;
+      color: #838383;
+      width: 100%;
+
+      input:focus {
+        outline: none;
+      }
+    }
+
+    .profile_form {
+      margin-left: 0.3em;
+      margin-bottom: 1em;
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 15px;
+        font-style: italic;
+
+        input {
+          font-size: 13px;
+          color: #838383;
+          width: 100%;
+          margin-top: 0.2em;
+          margin-bottom: 1em;
+
+          :focus {
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+
+  .profile_info_right {
+    margin-left: auto; // align right
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+    white-space: nowrap;
+
+    .profile_pic {
+      margin-bottom: 0.5em;
+    }
+
+    .profile_stat {
+      font-size: 13px;
+      color: #838383;
+    }
+  }
+
+  .profile_link {
+    margin-top: 0.5em;
+    align-self: flex-end;
+
+    font-size: 12px;
+    color: #838383;
+  }
+}
+
+.actions_container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0.3em;
+
+  span {
+    font-style: italic;
+  }
+
+  > * {
+    margin-right: 0.5em;
+  }
+
+  > :focus {
+    outline: none;
+  }
+}

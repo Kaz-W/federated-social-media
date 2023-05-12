@@ -1,0 +1,43 @@
+.navbar {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  z-index: 1000;
+
+  padding: 0 40px;
+  box-sizing: border-box;
+
+  width: 100vw;
+
+  box-shadow: 0 12px 12px -8px rgba(215, 215, 215, 0.2);
+
+  .logo {
+    font-weight: bold;
+    margin: 10px 0;
+
+    text-decoration: none;
+    color: black;
+
+    > img {
+      height: 50px;
+    }
+
+    &:hover {
+      filter: brightness(95%);
+    }
+  }
+}
+
+.auth_links {
+  display: flex;
+
+  align-items: center;
+
+  margin-left: auto;
+
+  > * {
+    margin: 0 20px;
+  }
+
+}

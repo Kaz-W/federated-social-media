@@ -1,0 +1,26 @@
+.profile_image {
+  box-sizing: border-box;
+  background-color: #C4C4C4;
+
+  &.s_small {
+    width: 25px;
+    height: 25px;
+    border-radius: 12.5px;
+  }
+
+  &.s_normal {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+  }
+
+  &.s_large {
+    width: 100px;
+    height: 100px;
+    border-radius: 25px;
+  }
+
+  &.border {
+    border: 0.5px solid grey;
+  }
+}

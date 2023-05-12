@@ -1,0 +1,15 @@
+.user_preview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  margin: 5px 0;
+
+  p {
+    margin: 3px auto 3px 5px;
+  }
+
+  & > * {
+    margin: 0 5px;
+  }
+}

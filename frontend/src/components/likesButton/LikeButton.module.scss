@@ -1,0 +1,57 @@
+$colour-background: #EFEFEF;
+$colour-primary: #2C67FF;
+$colour-danger: #ff4646;
+
+.like_wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  > :first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &.upvote {
+      color: $colour-primary;
+    }
+  }
+
+  > :last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    &.downvote {
+      color: $colour-primary;
+    }
+  }
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  padding: 0 7px;
+  background-color: $colour-background;
+
+  border-left: $colour-primary solid 2px;
+  border-right: $colour-primary solid 2px;
+
+  &.s_small {
+    padding: 0 3px;
+    font-size: 12px;
+  }
+}
+
+.count_positive {
+  @extend .count;
+  border-color: $colour-primary;
+}
+
+.count_neutral {
+  @extend .count;
+  border-color: #c3c3c3;
+}
+
+.count_negative {
+  @extend .count;
+  border-color: $colour-danger;
+}
